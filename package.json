@@ -1,0 +1,13 @@
+{
+  "name": "ziya-portfolio",
+  "version": "1.0.0",
+  "description": "Şəxsi portfolio saytı – Ziya Səfərzadə",
+  "private": true,
+  "scripts": {
+    "start": "npx live-server .",
+    "preview": "npx serve ."
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
+
