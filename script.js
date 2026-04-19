@@ -34,6 +34,32 @@ document.addEventListener("DOMContentLoaded", () => {
       card.addEventListener("mouseenter", loadIframe, { once: true });
       card.addEventListener("touchstart", loadIframe, { once: true, passive: true });
     }
+
+    // 3D Tilt Animasiyası
+    if (window.matchMedia("(pointer: fine)").matches) { // Yalnız mausla işləyən cihazlarda
+      let bounds;
+      card.addEventListener("mouseenter", () => { bounds = card.getBoundingClientRect(); });
+      
+      card.addEventListener("mousemove", (e) => {
+        if (!bounds) bounds = card.getBoundingClientRect();
+        const x = e.clientX - bounds.left;
+        const y = e.clientY - bounds.top;
+        const centerX = bounds.width / 2;
+        const centerY = bounds.height / 2;
+        
+        const rotateX = ((y - centerY) / centerY) * -6; // Maksimum 6 dərəcə fırlanma
+        const rotateY = ((x - centerX) / centerX) * 6;
+        
+        card.style.transition = "transform 0.1s ease-out";
+        card.style.transform = `perspective(1000px) scale(1.02) translateY(-6px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+
+      card.addEventListener("mouseleave", () => {
+        card.style.transition = ""; // CSS-dəki orijinal transition-a qayıt
+        card.style.transform = ""; // CSS-dəki orijinal transform-a qayıt
+        bounds = null;
+      });
+    }
   });
 });
 
@@ -45,17 +71,18 @@ window.addEventListener("load", () => {
 
   // Reveal animasiyası
   const observerOptions = {
-    threshold: 0.15,
-    rootMargin: "0px 0px -50px 0px",
+    threshold: 0.1,
+    rootMargin: "0px 0px -20px 0px",
   };
 
-  const observer = new IntersectionObserver((entries, obs) => {
+  const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       const el = entry.target;
 
       if (entry.isIntersecting) {
         el.classList.add("visible");
-        obs.unobserve(el); // Element göründükdən sonra izləməni dayandır
+      } else {
+        el.classList.remove("visible"); // Element ekrandan çıxanda görünməz olsun, bir daha gələndə animasiya yenidən işləsin
       }
     });
   }, observerOptions);
@@ -63,6 +90,40 @@ window.addEventListener("load", () => {
   document.querySelectorAll(".reveal").forEach((el) => {
     observer.observe(el);
   });
+
+  // Cursor Animasiyası Məntiqi
+  const cursor = document.querySelector('.custom-cursor');
+  const trail = document.querySelector('.cursor-trail');
+
+  if (cursor && trail) {
+    let mouseX = -100;
+    let mouseY = -100;
+    let isCursorMoving = false;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (!isCursorMoving) {
+        isCursorMoving = true;
+        requestAnimationFrame(() => {
+          cursor.style.setProperty('--tx', `${mouseX - 4}px`);
+          cursor.style.setProperty('--ty', `${mouseY - 4}px`);
+          trail.style.setProperty('--tx', `${mouseX - 16}px`);
+          trail.style.setProperty('--ty', `${mouseY - 16}px`);
+          isCursorMoving = false;
+        });
+      }
+    }, { passive: true });
+
+    // Aktiv elementlərin üzərinə gələndə effekt
+    const interactables = 'a, button, .card, .project-card, .nav-toggle, input, textarea';
+    document.addEventListener('mouseover', (e) => {
+      if (e.target.closest(interactables)) trail.classList.add('hover');
+    });
+    document.addEventListener('mouseout', (e) => {
+      if (e.target.closest(interactables)) trail.classList.remove('hover');
+    });
+  }
 
   // Footer ili
   const yearSpan = document.getElementById("year");
