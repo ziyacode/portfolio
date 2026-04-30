@@ -30,9 +30,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       };
 
-      // İstəkdən asılı olaraq animasiyalı yüklənmə
-      card.addEventListener("mouseenter", loadIframe, { once: true });
-      card.addEventListener("touchstart", loadIframe, { once: true, passive: true });
+      // Yalnız mausla idarə olunan cihazlarda (kompüterlərdə) iframe yüklənsin.
+      // Mobildə ekrana toxunduqda (touchstart) yüklənmə başlasa, scroll zamanı ekranı donduracaq.
+      if (window.matchMedia("(pointer: fine)").matches) {
+        card.addEventListener("mouseenter", loadIframe, { once: true });
+      }
     }
 
     // 3D Tilt Animasiyası
@@ -95,7 +97,8 @@ window.addEventListener("load", () => {
   const cursor = document.querySelector('.custom-cursor');
   const trail = document.querySelector('.cursor-trail');
 
-  if (cursor && trail) {
+  // Kursor animasiyası JavaScript-ini yalnız kompüterlərdə aktiv edirik ki, mobil telefonların prosessorunu yormasın.
+  if (cursor && trail && window.matchMedia("(pointer: fine)").matches) {
     let mouseX = -100;
     let mouseY = -100;
     let isCursorMoving = false;

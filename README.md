@@ -1,6 +1,6 @@
-# Ziya Səfərzadə – Portfolio
+# Ziya Niyazoğlu – Portfolio
 
-Bu qovluqda Ziya Səfərzadənin şəxsi portfolio saytı yerləşir. Sayt statik HTML, CSS və JavaScript istifadə etməklə hazırlanıb.
+Bu qovluqda Ziya Niyazoğlunun şəxsi portfolio saytı yerləşir. Sayt statik HTML, CSS və JavaScript istifadə etməklə hazırlanıb.
 
 ## Fayllar
 
@@ -19,4 +19,3 @@ npm run start
 ```
 
 Əgər `npm` istifadə etmək istəmirsinizsə, sadəcə `index.html` faylını brauzerdə açmaq kifayətdir.
-
